@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    name: Build and Type Check
     runs-on: ubuntu-latest
 
     strategy:
@@ -36,4 +37,18 @@ jobs:
       with:
         name: dist
         path: dist/
-        retention-days: 7 
+        retention-days: 7
+
+  status-check:
+    name: Status Check
+    needs: build
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check build status
+        run: |
+          if [ "${{ needs.build.result }}" = "success" ]; then
+            exit 0
+          else
+            exit 1
+          fi 
