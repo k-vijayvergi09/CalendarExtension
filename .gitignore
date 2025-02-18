@@ -17,6 +17,7 @@ dist
 build
 out
 .next
+package-lock.json
 
 # IDE and editor files
 .idea
