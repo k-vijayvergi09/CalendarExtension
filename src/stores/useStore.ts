@@ -1,17 +1,11 @@
 import { create } from 'zustand'
+import { Event } from '../types/calendar'
 
 interface CalendarState {
   events: Event[]
   isLoading: boolean
   addEvent: (event: Event) => void
   setLoading: (loading: boolean) => void
-}
-
-interface Event {
-  id: string
-  title: string
-  date: Date
-  description?: string
 }
 
 export const useStore = create<CalendarState>((set) => ({
