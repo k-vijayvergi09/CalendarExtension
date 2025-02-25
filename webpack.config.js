@@ -3,7 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
+  devtool: 'source-map',
   entry: {
     sidepanel: './src/sidepanel/index.tsx',
   },
