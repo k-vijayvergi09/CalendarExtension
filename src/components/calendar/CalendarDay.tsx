@@ -8,7 +8,6 @@ interface CalendarDayProps {
   isCurrentMonth: boolean;
   events: Event[];
   isToday: boolean;
-  onSelectDate: (date: Date) => void;
 }
 
 // Helper function to check if a date falls on the same day
@@ -25,15 +24,13 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
   isCurrentMonth,
   events,
   isToday,
-  onSelectDate,
 }) => {
   const dayEvents = events.filter(event => isSameDay(event.date, date));
 
   return (
     <div
-      onClick={() => onSelectDate(date)}
       className={cn(
-        "relative h-24 p-1 hover:bg-accent/50 transition-colors cursor-pointer group",
+        "relative h-24 p-1 hover:bg-accent/50 transition-colors",
         {
           "bg-background": isCurrentMonth,
           "bg-muted/50": !isCurrentMonth,

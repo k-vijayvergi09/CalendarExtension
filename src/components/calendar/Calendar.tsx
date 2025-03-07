@@ -15,10 +15,9 @@ interface ProcessedEvent extends Event {
 
 interface CalendarProps {
   events: Event[];
-  onSelectDate: (date: Date) => void;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ events, onSelectDate }) => {
+export const Calendar: React.FC<CalendarProps> = ({ events }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const today = new Date();
 
@@ -154,7 +153,6 @@ export const Calendar: React.FC<CalendarProps> = ({ events, onSelectDate }) => {
                   isCurrentMonth={day.isCurrentMonth}
                   events={singleDayEvents}
                   isToday={day.date?.toDateString() === today.toDateString()}
-                  onSelectDate={onSelectDate}
                 />
               ))}
             </div>

@@ -6,7 +6,7 @@ import { GoogleSignIn } from '../components/auth/GoogleSignIn';
 import { formatDate } from '../utils/calendarUtils';
 
 const App: React.FC = () => {
-  const { events, addEvent, isSignedIn, isLoading, error, checkAuthState, fetchGoogleEvents } = useStore();
+  const { events, isSignedIn, isLoading, error, checkAuthState, fetchGoogleEvents } = useStore();
   const { showToast } = useToast();
   const [showDebug, setShowDebug] = useState(false);
 
@@ -45,7 +45,7 @@ const App: React.FC = () => {
       start: date,
       end: new Date(date.getTime() + 60 * 60 * 1000) // Event ends 1 hour after start
     };
-    addEvent(newEvent);
+    useStore.getState().addEvent(newEvent);
     showToast(`Event added for ${formatDate(date)}`, 'success');
   };
 
@@ -95,10 +95,7 @@ const App: React.FC = () => {
         </div>
       )}
       
-      <Calendar 
-        events={events}
-        onSelectDate={handleDateSelect}
-      />
+      <Calendar events={events} />
       
       {showDebug && (
         <div className="mt-4 px-4">
