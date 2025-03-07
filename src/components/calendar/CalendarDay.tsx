@@ -1,5 +1,7 @@
 import React from 'react';
 import { Event } from '../../types/calendar';
+import { cn } from '../../utils/cn';
+import { getEventColor } from '../../utils/eventColors';
 
 interface CalendarDayProps {
   date: Date;
@@ -25,70 +27,55 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
   isToday,
   onSelectDate,
 }) => {
-  // Find events for this day - checking both date and start fields
-  const dayEvents = events.filter(event => {
-    // Try to match against the date field
-    if (isSameDay(event.date, date)) {
-      return true;
-    }
-    
-    // Also check the start field for events that span multiple days
-    if (event.start && isSameDay(event.start, date)) {
-      return true;
-    }
-    
-    // Check if the date falls between start and end for multi-day events
-    if (event.start && event.end) {
-      const dayStart = new Date(date);
-      dayStart.setHours(0, 0, 0, 0);
-      
-      const dayEnd = new Date(date);
-      dayEnd.setHours(23, 59, 59, 999);
-      
-      return event.start <= dayEnd && event.end >= dayStart;
-    }
-    
-    return false;
-  });
-
-  const dayClasses = `
-    relative w-full h-24 p-1 border border-gray-200
-    ${isCurrentMonth ? 'bg-white' : 'bg-gray-50'}
-    ${isToday ? 'ring-2 ring-blue-500' : ''}
-    hover:bg-gray-50 cursor-pointer
-  `;
-
-  const dateClasses = `
-    text-sm font-medium
-    ${isCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
-  `;
+  const dayEvents = events.filter(event => isSameDay(event.date, date));
 
   return (
     <div
-      className={dayClasses}
       onClick={() => onSelectDate(date)}
+      className={cn(
+        "relative h-24 p-1 hover:bg-accent/50 transition-colors cursor-pointer group",
+        {
+          "bg-background": isCurrentMonth,
+          "bg-muted/50": !isCurrentMonth,
+          "ring-2 ring-primary ring-inset": isToday,
+        }
+      )}
     >
-      <span className={dateClasses}>
+      <span
+        className={cn(
+          "inline-flex h-6 w-6 items-center justify-center rounded-full text-sm font-medium",
+          {
+            "text-foreground": isCurrentMonth,
+            "text-muted-foreground": !isCurrentMonth,
+            "bg-primary text-primary-foreground": isToday,
+          }
+        )}
+      >
         {date.getDate()}
       </span>
-      {dayEvents.length > 0 && (
-        <div className="mt-1">
-          {dayEvents.slice(0, 2).map(event => (
-            <div
-              key={event.id}
-              className="text-xs truncate px-1 py-0.5 rounded bg-blue-100 text-blue-700 mb-1"
-              title={event.title}
-            >
-              {event.title}
-            </div>
-          ))}
-          {dayEvents.length > 2 && (
-            <div className="text-xs text-gray-500">
-              +{dayEvents.length - 2} more
-            </div>
-          )}
-        </div>
-      )}
+      
+      <div className="mt-1 space-y-1">
+        {dayEvents.slice(0, 2).map(event => (
+          <div
+            key={event.id}
+            className={cn(
+              "rounded-full px-2 py-0.5 text-xs font-medium truncate shadow-sm transition-all",
+              "hover:shadow-md hover:scale-[1.02]",
+              "group-hover:shadow-md",
+              getEventColor(event.id)
+            )}
+            title={event.title}
+          >
+            {event.title}
+          </div>
+        ))}
+        
+        {dayEvents.length > 2 && (
+          <div className="text-xs font-medium text-muted-foreground pl-2 hover:text-foreground transition-colors">
+            +{dayEvents.length - 2} more
+          </div>
+        )}
+      </div>
     </div>
   );
 }; 

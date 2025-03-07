@@ -37,8 +37,13 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'public', to: '.' },
-        { from: 'manifest.json', to: '.' },
+        { from: 'manifest.json', to: 'manifest.json' },
+        // Only copy icons if they exist
+        {
+          from: 'icons',
+          to: 'icons',
+          noErrorOnMissing: true // This will prevent the error if icons directory is missing
+        }
       ],
     }),
   ],

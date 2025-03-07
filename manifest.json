@@ -11,7 +11,7 @@
     "https://www.googleapis.com/*"
   ],
   "oauth2": {
-    "client_id": "595246701109-ohbdb7r2311b3g9v3hmdok66f0t25p3o.apps.googleusercontent.com",
+    "client_id": "595246701109-6ga6vnug5v7sekv3bv3jg1vt81gs209c.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/calendar",
       "https://www.googleapis.com/auth/calendar.events"
