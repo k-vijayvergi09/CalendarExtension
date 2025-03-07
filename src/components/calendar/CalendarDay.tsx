@@ -10,12 +10,24 @@ interface CalendarDayProps {
   isToday: boolean;
 }
 
-// Helper function to check if a date falls on the same day
-const isSameDay = (date1: Date, date2: Date): boolean => {
+// Enhanced date normalization and comparison
+const normalizeDate = (date: Date | string): Date => {
+  const d = typeof date === 'string' ? new Date(date) : new Date(date);
+  // Set to midnight local time to remove time component
+  d.setHours(0, 0, 0, 0);
+  return d;
+};
+
+const isSameDay = (date1: Date | string | undefined, date2: Date): boolean => {
+  if (!date1) return false;
+  
+  const d1 = normalizeDate(date1);
+  const d2 = normalizeDate(date2);
+  
   return (
-    date1.getFullYear() === date2.getFullYear() &&
-    date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate()
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
   );
 };
 
@@ -25,7 +37,25 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
   events,
   isToday,
 }) => {
-  const dayEvents = events.filter(event => isSameDay(event.date, date));
+  // Filter events for this day using normalized date comparison
+  const dayEvents = events.filter(event => {
+    // Check the primary date field
+    if (event.date && isSameDay(event.date, date)) {
+      return true;
+    }
+    
+    // Check the start date for events without an end date
+    if (event.start && !event.end && isSameDay(event.start, date)) {
+      return true;
+    }
+    
+    // Check both start and end for single-day events
+    if (event.start && event.end && isSameDay(event.start, date) && isSameDay(event.end, date)) {
+      return true;
+    }
+    
+    return false;
+  });
 
   return (
     <div
@@ -58,7 +88,6 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
             className={cn(
               "rounded-full px-2 py-0.5 text-xs font-medium truncate shadow-sm transition-all",
               "hover:shadow-md hover:scale-[1.02]",
-              "group-hover:shadow-md",
               getEventColor(event.id)
             )}
             title={event.title}
