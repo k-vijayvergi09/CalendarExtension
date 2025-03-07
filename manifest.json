@@ -3,7 +3,20 @@
   "name": "Calendar Extension",
   "version": "1.0.0",
   "description": "A calendar extension with sidepanel view",
-  "permissions": ["sidePanel"],
+  "permissions": [
+    "sidePanel",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://www.googleapis.com/*"
+  ],
+  "oauth2": {
+    "client_id": "595246701109-ohbdb7r2311b3g9v3hmdok66f0t25p3o.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/calendar.events"
+    ]
+  },
   "side_panel": {
     "default_path": "sidepanel.html"
   },
