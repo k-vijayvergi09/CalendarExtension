@@ -1,7 +1,8 @@
 import React from 'react';
 import { Event } from '../../types/calendar';
 import { cn } from '../../utils/cn';
-import { getEventColor } from '../../utils/eventColors';
+import { getEventColorStyles } from '../../utils/eventColors';
+import { isSameDay } from '../../utils/dateUtils';
 
 interface CalendarDayProps {
   date: Date;
@@ -9,27 +10,6 @@ interface CalendarDayProps {
   events: Event[];
   isToday: boolean;
 }
-
-// Enhanced date normalization and comparison
-const normalizeDate = (date: Date | string): Date => {
-  const d = typeof date === 'string' ? new Date(date) : new Date(date);
-  // Set to midnight local time to remove time component
-  d.setHours(0, 0, 0, 0);
-  return d;
-};
-
-const isSameDay = (date1: Date | string | undefined, date2: Date): boolean => {
-  if (!date1) return false;
-  
-  const d1 = normalizeDate(date1);
-  const d2 = normalizeDate(date2);
-  
-  return (
-    d1.getFullYear() === d2.getFullYear() &&
-    d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate()
-  );
-};
 
 export const CalendarDay: React.FC<CalendarDayProps> = ({
   date,
@@ -82,19 +62,19 @@ export const CalendarDay: React.FC<CalendarDayProps> = ({
       </span>
       
       <div className="mt-1 space-y-1">
-        {dayEvents.slice(0, 2).map(event => (
-          <div
-            key={event.id}
-            className={cn(
-              "rounded-full px-2 py-0.5 text-xs font-medium truncate shadow-sm transition-all",
-              "hover:shadow-md hover:scale-[1.02]",
-              getEventColor(event.id)
-            )}
-            title={event.title}
-          >
-            {event.title}
-          </div>
-        ))}
+        {dayEvents.slice(0, 2).map(event => {
+          const { backgroundColor, textColor } = getEventColorStyles(event);
+          return (
+            <div
+              key={event.id}
+              className="rounded-full px-2 py-0.5 text-xs font-medium truncate shadow-sm transition-all hover:shadow-md hover:scale-[1.02]"
+              style={{ backgroundColor, color: textColor }}
+              title={event.title}
+            >
+              {event.title}
+            </div>
+          );
+        })}
         
         {dayEvents.length > 2 && (
           <div className="text-xs font-medium text-muted-foreground pl-2 hover:text-foreground transition-colors">

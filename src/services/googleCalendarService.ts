@@ -12,6 +12,9 @@ interface GoogleCalendarEvent {
     date?: string;
   };
   recurrence?: string[];
+  colorId?: string;
+  colorRgbFormat?: boolean;
+  backgroundColor?: string;
 }
 
 interface GoogleCalendarResponse {
@@ -25,6 +28,8 @@ export interface CalendarEvent {
   description: string;
   start: Date;
   end: Date;
+  colorId?: string;
+  color?: string;
 }
 
 export class GoogleCalendarError extends Error {
@@ -83,7 +88,7 @@ export const fetchCalendarEvents = async (
     try {
       // Request more details using fields parameter and up to 100 events
       const response = await fetch(
-        `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${timeMinISO}&timeMax=${timeMaxISO}&singleEvents=true&orderBy=startTime&maxResults=100`,
+        `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${timeMinISO}&timeMax=${timeMaxISO}&singleEvents=true&orderBy=startTime&maxResults=100&colorRgbFormat=true`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -206,6 +211,8 @@ const transformEvents = (items: GoogleCalendarEvent[]): CalendarEvent[] => {
             description: item.description || '',
             start,
             end,
+            colorId: item.colorId,
+            color: typeof item.colorRgbFormat === 'string' ? item.colorRgbFormat : (item.backgroundColor || 'default'),
           };
           
           console.log('Transformed event:', event.id, event.title, 'Date:', event.date.toISOString());
@@ -221,6 +228,8 @@ const transformEvents = (items: GoogleCalendarEvent[]): CalendarEvent[] => {
             description: 'There was an error processing this event',
             start: now,
             end: now,
+            colorId: 'default',
+            color: 'default',
           };
         }
       });
@@ -314,4 +323,4 @@ export const getFreshAuthToken = async (): Promise<string> => {
     console.error('Error getting fresh token:', error);
     throw error;
   }
-}; 
+};
