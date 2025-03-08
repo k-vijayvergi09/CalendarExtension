@@ -4,7 +4,7 @@ import { DAYS_OF_WEEK, generateCalendarDays } from '../../utils/calendarUtils';
 import { Event } from '../../types/calendar';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 import { useCalendarGrid } from '../../hooks/useCalendarGrid';
-import { MultiDayEventLayer } from './MultiDayEventLayer';
+import { EventLayer } from './EventLayer';
 import { CalendarGrid } from './CalendarGrid';
 
 interface CalendarProps {
@@ -28,36 +28,34 @@ export const Calendar: React.FC<CalendarProps> = ({ events }) => {
     currentDate.getFullYear(),
     currentDate.getMonth()
   );
-
-  // Use custom hooks to process events and measure the grid
+  
   const { singleDayEvents, eventsByWeek } = useCalendarEvents(events, calendarDays);
   const { rowHeights, getRowOffset } = useCalendarGrid(calendarGridRef, calendarDays);
 
   return (
-    <div className="w-full space-y-4">
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="p-6">
-          <CalendarHeader
-            currentDate={currentDate}
-            onPrevMonth={handlePrevMonth}
-            onNextMonth={handleNextMonth}
-          />
-          
-          <div className="mt-6 grid grid-cols-7 text-center text-sm">
-            {DAYS_OF_WEEK.map(day => (
-              <div
-                key={day}
-                className="text-muted-foreground font-medium py-2"
-              >
+    <div className="bg-background rounded-lg shadow-md overflow-hidden">
+      <div className="flex flex-col h-full">
+        <CalendarHeader 
+          currentDate={currentDate}
+          onPrevMonth={handlePrevMonth}
+          onNextMonth={handleNextMonth}
+        />
+        
+        <div className="flex-1 overflow-auto">
+          <div className="grid grid-cols-7 text-center">
+            {DAYS_OF_WEEK.map((day, index) => (
+              <div key={index} className="py-2 text-sm font-medium text-muted-foreground">
                 {day}
               </div>
             ))}
           </div>
 
           <div className="relative mt-2">
-            {/* Multi-day events layer */}
-            <MultiDayEventLayer 
+            {/* Combined event layer for both multi-day and single-day events */}
+            <EventLayer 
               eventsByWeek={eventsByWeek} 
+              singleDayEvents={singleDayEvents}
+              calendarDays={calendarDays}
               getRowOffset={getRowOffset}
               rowHeights={rowHeights}
             />
@@ -65,7 +63,6 @@ export const Calendar: React.FC<CalendarProps> = ({ events }) => {
             {/* Calendar grid */}
             <CalendarGrid
               calendarDays={calendarDays}
-              singleDayEvents={singleDayEvents}
               today={today}
               gridRef={calendarGridRef}
             />
