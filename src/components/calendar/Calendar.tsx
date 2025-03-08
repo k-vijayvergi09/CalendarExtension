@@ -1,14 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { CalendarHeader } from './CalendarHeader';
 import { DAYS_OF_WEEK, generateCalendarDays } from '../../utils/calendarUtils';
-import { Event } from '../../types/calendar';
+import { CalendarEvent } from '../../types/calendar';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 import { useCalendarGrid } from '../../hooks/useCalendarGrid';
 import { EventLayer } from './EventLayer';
 import { CalendarGrid } from './CalendarGrid';
 
 interface CalendarProps {
-  events: Event[];
+  events: CalendarEvent[];
 }
 
 export const Calendar: React.FC<CalendarProps> = ({ events }) => {

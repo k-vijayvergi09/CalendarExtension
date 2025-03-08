@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Event } from '../types/calendar'
+import { CalendarEvent } from '../types/calendar'
 import { getFreshAuthToken } from '../services/authService'
 import { GoogleCalendarError } from '../utils/errors'
 import { 
@@ -8,7 +8,7 @@ import {
 } from '../services/googleCalendarService'
 
 interface CalendarState {
-  events: Event[]
+  events: CalendarEvent[]
   isLoading: boolean
   error: string | null
   isSignedIn: boolean

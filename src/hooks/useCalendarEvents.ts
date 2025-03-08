@@ -1,7 +1,7 @@
-import { Event } from '../types/calendar';
+import { CalendarEvent } from '../types/calendar';
 import { isSameDay, normalizeDate } from '../utils/dateUtils';
 
-interface ProcessedEvent extends Event {
+interface ProcessedEvent extends CalendarEvent {
   weekStartDay: number;
   weekEndDay: number;
   isFirstWeek: boolean;
@@ -9,7 +9,7 @@ interface ProcessedEvent extends Event {
 }
 
 export const useCalendarEvents = (
-  events: Event[], 
+  events: CalendarEvent[], 
   calendarDays: Array<{ date: Date | null; isCurrentMonth: boolean }>
 ) => {
   // Process and validate all events

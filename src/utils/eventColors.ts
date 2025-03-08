@@ -1,4 +1,4 @@
-import { Event } from '../types/calendar';
+import { CalendarEvent } from '../types/calendar';
 import { getGoogleCalendarColor } from './googleCalendarColors';
 
 // Colors for events that don't have a user-defined color
@@ -12,7 +12,7 @@ const EVENT_COLORS = [
   { bg: "#e0e7ff", text: "#4338ca" }, // indigo
 ];
 
-export const getEventColorStyles = (event: Event): { backgroundColor: string, textColor: string } => {
+export const getEventColorStyles = (event: CalendarEvent): { backgroundColor: string, textColor: string } => {
   // If the event has a colorId, use Google's color
   if (event.colorId) {
     const { background, foreground } = getGoogleCalendarColor(event.colorId);

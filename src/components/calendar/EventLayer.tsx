@@ -1,9 +1,9 @@
 import React from 'react';
-import { Event } from '../../types/calendar';
+import { CalendarEvent } from '../../types/calendar';
 import { cn } from '../../utils/cn';
 import { getEventColorStyles } from '../../utils/eventColors';
 
-interface ProcessedEvent extends Event {
+interface ProcessedEvent extends CalendarEvent {
   weekStartDay: number;
   weekEndDay: number;
   isFirstWeek: boolean;
@@ -12,7 +12,7 @@ interface ProcessedEvent extends Event {
 
 interface EventLayerProps {
   eventsByWeek: Record<string, ProcessedEvent[]>;
-  singleDayEvents: Event[];
+  singleDayEvents: CalendarEvent[];
   calendarDays: Array<{ date: Date | null; isCurrentMonth: boolean }>;
   getRowOffset: (rowIndex: number) => number;
   rowHeights: number[];
@@ -25,7 +25,7 @@ const getLocalDateKey = (date: Date): string => {
 
 // Shared event rendering component
 interface EventItemProps {
-  event: Event | ProcessedEvent;
+  event: CalendarEvent | ProcessedEvent;
   style: React.CSSProperties;
   className?: string;
 }
@@ -70,7 +70,7 @@ export const EventLayer: React.FC<EventLayerProps> = ({
   });
 
   // Group single-day events by date for easier processing
-  const eventsByDay: Record<string, Event[]> = {};
+  const eventsByDay: Record<string, CalendarEvent[]> = {};
   singleDayEvents.forEach(event => {
     const eventDate = event.date || event.start;
     if (!eventDate) return;
