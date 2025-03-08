@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import { Event } from '../types/calendar'
+import { getFreshAuthToken } from '../services/authService'
+import { GoogleCalendarError } from '../utils/errors'
 import { 
   fetchCalendarEvents, 
-  GoogleCalendarError, 
-  getFreshAuthToken, 
   removeCachedToken 
 } from '../services/googleCalendarService'
 
@@ -112,11 +112,11 @@ export const useStore = create<CalendarState>((set) => ({
       const googleEvents = await fetchCalendarEvents();
       set({ events: googleEvents });
     } catch (error: unknown) {
-      const errorMessage = error instanceof GoogleCalendarError 
-        ? error.message 
-        : error instanceof Error
-          ? error.message
-          : 'Failed to fetch calendar events';
+      const errorMessage = 
+        error instanceof GoogleCalendarError ? error.message : 
+        error instanceof Error ? error.message : 
+        'Failed to fetch calendar events';
+      
       set({ error: errorMessage });
       console.error('Error fetching Google Calendar events:', error);
     } finally {

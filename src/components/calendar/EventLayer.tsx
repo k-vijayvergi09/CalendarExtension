@@ -24,6 +24,34 @@ const getLocalDateKey = (date: Date): string => {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
+// Shared event rendering component
+interface EventItemProps {
+  event: Event | ProcessedEvent;
+  style: React.CSSProperties;
+  className?: string;
+}
+
+const EventItem: React.FC<EventItemProps> = ({ event, style, className }) => {
+  const { backgroundColor, textColor } = getEventColorStyles(event);
+  
+  return (
+    <div
+      className={cn("absolute flex items-center justify-center pointer-events-auto", className)}
+      style={{
+        ...style,
+        backgroundColor,
+        color: textColor,
+        height: '20px',
+      }}
+      title={event.title}
+    >
+      <span className="truncate text-xs font-medium w-full text-center">
+        {event.title}
+      </span>
+    </div>
+  );
+};
+
 export const EventLayer: React.FC<EventLayerProps> = ({ 
   eventsByWeek, 
   singleDayEvents,
@@ -73,13 +101,13 @@ export const EventLayer: React.FC<EventLayerProps> = ({
           >
             {weekEvents.map(event => {
               const span = event.weekEndDay - event.weekStartDay + 1;
-              const { backgroundColor, textColor } = getEventColorStyles(event);
               
               return (
-                <div
+                <EventItem
                   key={`${event.id}-${weekKey}`}
+                  event={event}
                   className={cn(
-                    "absolute mt-7 flex items-center justify-center pointer-events-auto",
+                    "mt-7",
                     {
                       "rounded-l-full": event.isFirstWeek,
                       "rounded-r-full": event.isLastWeek,
@@ -90,16 +118,8 @@ export const EventLayer: React.FC<EventLayerProps> = ({
                     width: `${(span / 7) * 100}%`,
                     paddingLeft: event.isFirstWeek ? '0.5rem' : '0.25rem',
                     paddingRight: event.isLastWeek ? '0.5rem' : '0.25rem',
-                    backgroundColor,
-                    color: textColor,
-                    height: '20px'
                   }}
-                  title={event.title}
-                >
-                  <span className="truncate text-xs font-medium w-full text-center">
-                    {event.title}
-                  </span>
-                </div>
+                />
               );
             })}
           </div>
@@ -115,31 +135,20 @@ export const EventLayer: React.FC<EventLayerProps> = ({
         const topOffset = getRowOffset(row);
         const cellWidth = 100 / 7; // percentage width of one cell
         
-        return events.slice(0, 3).map((event, index) => {
-          const { backgroundColor, textColor } = getEventColorStyles(event);
-          
-          return (
-            <div
-              key={`single-${event.id}`}
-              className="absolute flex items-center justify-center pointer-events-auto rounded-full"
-              style={{
-                top: `${topOffset + 28 + (index * 20)}px`,
-                left: `${col * cellWidth + 2}%`,
-                width: `${cellWidth - 4}%`,
-                backgroundColor,
-                color: textColor,
-                height: '20px',
-                paddingLeft: '0.5rem',
-                paddingRight: '0.5rem'
-              }}
-              title={event.title}
-            >
-              <span className="truncate text-xs font-medium w-full text-center">
-                {event.title}
-              </span>
-            </div>
-          );
-        });
+        return events.slice(0, 3).map((event, index) => (
+          <EventItem
+            key={`single-${event.id}`}
+            event={event}
+            className="rounded-full"
+            style={{
+              top: `${topOffset + 28 + (index * 20)}px`,
+              left: `${col * cellWidth + 2}%`,
+              width: `${cellWidth - 4}%`,
+              paddingLeft: '0.5rem',
+              paddingRight: '0.5rem'
+            }}
+          />
+        ));
       })}
       
       {/* "More" indicators for days with many events */}
