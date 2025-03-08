@@ -3,7 +3,6 @@ import { useStore } from '../stores/useStore';
 import { useToast } from '../context/ToastContext';
 import { Calendar } from '../components/calendar/Calendar';
 import { GoogleSignIn } from '../components/auth/GoogleSignIn';
-import { formatDate } from '../utils/calendarUtils';
 
 const App: React.FC = () => {
   const { events, isSignedIn, isLoading, error, checkAuthState, fetchGoogleEvents } = useStore();
@@ -29,24 +28,6 @@ const App: React.FC = () => {
     } catch (error) {
       showToast('Failed to refresh events', 'error');
     }
-  };
-
-  const handleDateSelect = (date: Date) => {
-    if (!isSignedIn) {
-      showToast('Please sign in to add events', 'error');
-      return;
-    }
-
-    const newEvent = {
-      id: Date.now().toString(),
-      title: 'New Event',
-      date: date,
-      description: 'Click to edit',
-      start: date,
-      end: new Date(date.getTime() + 60 * 60 * 1000) // Event ends 1 hour after start
-    };
-    useStore.getState().addEvent(newEvent);
-    showToast(`Event added for ${formatDate(date)}`, 'success');
   };
 
   if (isLoading) {

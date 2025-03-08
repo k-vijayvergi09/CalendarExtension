@@ -2,7 +2,6 @@ import React from 'react';
 import { Event } from '../../types/calendar';
 import { cn } from '../../utils/cn';
 import { getEventColorStyles } from '../../utils/eventColors';
-import { isSameDay } from '../../utils/dateUtils';
 
 interface ProcessedEvent extends Event {
   weekStartDay: number;

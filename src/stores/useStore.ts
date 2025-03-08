@@ -12,7 +12,6 @@ interface CalendarState {
   isLoading: boolean
   error: string | null
   isSignedIn: boolean
-  addEvent: (event: Event) => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
   fetchGoogleEvents: () => Promise<void>
@@ -26,10 +25,6 @@ export const useStore = create<CalendarState>((set) => ({
   isLoading: false,
   error: null,
   isSignedIn: false,
-  addEvent: (event) => set((state) => ({ 
-    events: [...state.events, event],
-    error: null
-  })),
   setLoading: (loading) => set({ isLoading: loading }),
   setError: (error) => set({ error }),
   checkAuthState: async () => {

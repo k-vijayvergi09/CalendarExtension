@@ -92,7 +92,7 @@ export const useCalendarEvents = (
     
     // Find all days between start and end
     const dates: Date[] = [];
-    let currentDate = new Date(startDate);
+    const currentDate = new Date(startDate);
     
     while (currentDate <= endDate) {
       dates.push(new Date(currentDate));

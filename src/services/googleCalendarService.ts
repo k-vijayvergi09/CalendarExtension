@@ -4,25 +4,6 @@ import { transformEvents } from '../utils/googleCalendarTransformer';
 import { GoogleCalendarError } from '../utils/errors';
 import { getAuthToken, getFreshAuthToken } from './authService';
 
-// Google Calendar API types
-interface GoogleCalendarEvent {
-  id: string;
-  summary: string;
-  description?: string;
-  start: {
-    dateTime?: string;
-    date?: string;
-  };
-  end: {
-    dateTime?: string;
-    date?: string;
-  };
-  recurrence?: string[];
-  colorId?: string;
-  colorRgbFormat?: boolean;
-  backgroundColor?: string;
-}
-
 // Core API service for Google Calendar
 export const fetchCalendarEvents = async (
   timeMin: Date = new Date(),
@@ -91,19 +72,6 @@ export const fetchCalendarEvents = async (
       throw error;
     }
   }
-};
-
-// TODO: Implement these methods
-export const createCalendarEvent = async (event: Omit<CalendarEvent, 'id'>): Promise<CalendarEvent> => {
-  throw new Error('Not implemented');
-};
-
-export const updateCalendarEvent = async (eventId: string, event: Partial<CalendarEvent>): Promise<CalendarEvent> => {
-  throw new Error('Not implemented');
-};
-
-export const deleteCalendarEvent = async (eventId: string): Promise<void> => {
-  throw new Error('Not implemented');
 };
 
 // Remove cached token
